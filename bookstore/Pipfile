@@ -8,6 +8,7 @@ pika = "==1.3.2"
 fastapi = "*"
 bunnet = "*"
 pydantic = "*"
+pydantic-settings = "*"
 
 [dev-packages]
 

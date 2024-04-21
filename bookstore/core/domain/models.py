@@ -15,7 +15,7 @@ class Entity(Generic[EntityId]):
         return EntityUUID.next_id()
 
 
-class AggregateRoot(Generic[EntityId]):
+class AggregateRoot(Entity[EntityId]):
     events: list[Event] = field(default_factory=list)
 
     def register_event(self, event: Event):

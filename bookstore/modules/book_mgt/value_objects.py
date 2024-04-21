@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from bookstore.core.domain.value_objects import ValueObject
 
@@ -6,7 +7,7 @@ from bookstore.core.domain.value_objects import ValueObject
 class Author(ValueObject):
     first_name: str
     last_name: str
-    dob: datetime.date | None = None
+    dob: Optional[datetime.date] = None
 
 
 class StatusAttribute(ValueObject):
