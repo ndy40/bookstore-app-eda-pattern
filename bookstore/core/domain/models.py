@@ -1,18 +1,19 @@
+import dataclasses
 import datetime
+import uuid
 from dataclasses import field
 from typing import TypeVar, Generic
+
+from bunnet import PydanticObjectId
 
 from bookstore.core.domain.value_objects import EntityUUID, Event
 
 EntityId = TypeVar('EntityId', bound=EntityUUID)
 
 
+@dataclasses.dataclass
 class Entity(Generic[EntityId]):
-    id: EntityId = field(hash=True)
-
-    @classmethod
-    def next_id(cls) -> EntityId:
-        return EntityUUID.next_id()
+    id: EntityId = field(hash=True, default_factory=PydanticObjectId)
 
 
 class AggregateRoot(Entity[EntityId]):

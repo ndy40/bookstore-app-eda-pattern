@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  bookstore:
+    build:
+      context: .
+    container_name: bookstore_app
+    volumes:
+      - ./:/code/
+    command: python cli.py
+    tty: true
+

@@ -1,14 +1,12 @@
-import dataclasses
-from dataclasses import field
+import uuid
 from uuid import UUID, uuid4
 
+from bunnet import PydanticObjectId
 from pydantic import BaseModel, Field
 
 
-class EntityUUID(UUID):
-    @classmethod
-    def next_id(cls):
-        return cls(hex=uuid4().hex)
+class EntityUUID(PydanticObjectId):
+    ...
 
 
 class Message(BaseModel):

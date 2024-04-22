@@ -9,8 +9,10 @@ fastapi = "*"
 bunnet = "*"
 pydantic = "*"
 pydantic-settings = "*"
+typer = "*"
 
 [dev-packages]
+mypy = "*"
 
 [requires]
 python_version = "3.12"

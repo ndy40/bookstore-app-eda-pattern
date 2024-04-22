@@ -1,6 +1,6 @@
 import dataclasses
 
-from bookstore.core.domain.value_objects import Command
+from core.domain.value_objects import Command
 
 
 @dataclasses.dataclass
