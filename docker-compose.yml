@@ -9,4 +9,20 @@ services:
       - ./:/code/
     command: python cli.py
     tty: true
+    networks:
+      - eventbus
+    depends_on:
+      - rabbitmq
 
+  rabbitmq:
+    container_name: rbq_bookstore
+    image: rabbitmq:3-management-alpine
+    restart: unless-stopped
+    ports:
+      - "8080:15672"
+    networks:
+      - eventbus
+
+networks:
+  eventbus:
+    internal: true
