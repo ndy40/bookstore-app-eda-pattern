@@ -10,6 +10,7 @@ bunnet = "*"
 pydantic = "*"
 pydantic-settings = "*"
 typer = "*"
+celery = "*"
 
 [dev-packages]
 mypy = "*"

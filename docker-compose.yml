@@ -8,9 +8,12 @@ services:
     volumes:
       - ./:/code/
     command: python cli.py
+    env_file:
+      - .env
     tty: true
     networks:
       - eventbus
+      - outside_network
     depends_on:
       - rabbitmq
 
@@ -26,3 +29,4 @@ services:
 networks:
   eventbus:
     internal: true
+  outside_network:
