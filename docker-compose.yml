@@ -4,29 +4,35 @@ services:
   bookstore:
     build:
       context: .
-    container_name: bookstore_app
+    container_name: bookstore
     volumes:
-      - ./:/code/
-    command: python cli.py
+      - ./app/:/code/
+    command: /bin/sh
+    environment:
+      - DB_URL=${DB_URL}
+    tty: true
     env_file:
       - .env
-    tty: true
-    networks:
-      - eventbus
-      - outside_network
     depends_on:
+      - rabbitmq
+  workers:
+    build:
+      context: .
+    command:
+      celery -A bookstore.core.infrastructure.celery.app worker --loglevel=debug
+    environment:
+      - DB_URL=${DB_URL}
+      - BROKER_URL=${BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+    volumes:
+      - ./app/:/code/
+    depends_on:
+      - bookstore
       - rabbitmq
 
   rabbitmq:
-    container_name: rbq_bookstore
     image: rabbitmq:3-management-alpine
     restart: unless-stopped
     ports:
       - "8080:15672"
-    networks:
-      - eventbus
-
-networks:
-  eventbus:
-    internal: true
-  outside_network:
+      - "5672:5672"

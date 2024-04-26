@@ -8,15 +8,14 @@ from bookstore.core.domain.models import Entity as DomainEntity
 from bookstore.core.domain.value_objects import EntityUUID
 from bookstore.core.infrastructure.data_mapper import DataMapper
 
-Entity = TypeVar('Entity', bound=DomainEntity)
-EntityId = TypeVar('EntityId', bound=EntityUUID)
-BaseModel = TypeVar('BaseModel', bound=Any)
+Entity = TypeVar("Entity", bound=DomainEntity)
+EntityId = TypeVar("EntityId", bound=EntityUUID)
+BaseModel = TypeVar("BaseModel", bound=Any)
 
 
 class BaseRepository(Generic[EntityId, Entity], metaclass=ABCMeta):
     @abstractmethod
-    def persist(self, entity: Entity) -> None:
-        ...
+    def persist(self, entity: Entity) -> None: ...
 
     # @abstractmethod
     # def remove(self, entity: EntityId):
@@ -27,8 +26,7 @@ class BaseRepository(Generic[EntityId, Entity], metaclass=ABCMeta):
     #     ...
 
     @abstractmethod
-    def all(self) -> List[Entity]:
-        ...
+    def all(self) -> List[Entity]: ...
 
 
 class EntityRepository(BaseRepository[EntityId, Entity], metaclass=ABCMeta):
@@ -38,12 +36,13 @@ class EntityRepository(BaseRepository[EntityId, Entity], metaclass=ABCMeta):
 
     def __init__(self, client: MongoClient):
         self.client = client
-        init_bunnet(database=client.db_name, document_models=[self.model_class])
+        init_bunnet(database=client.book_store, document_models=[self.model_class])
 
     def all(self) -> List[BaseModel]:
         return self.active_model.find()
 
     def persist(self, entity: Entity) -> None:
+        print("Got it all")
         entity = self.mapper_class().map_from_entity_to_model(entity)
         entity.insert()
 
@@ -53,9 +52,7 @@ class EntityRepository(BaseRepository[EntityId, Entity], metaclass=ABCMeta):
 
     def _map_entity_to_model(self, instance: Entity) -> BaseModel:
         assert self.mapper_class, (
-                f"No model_class attribute set for {self.__class__.__name__}."
-                "Make sure to include `model_class=MyModel` in the class."
+            f"No model_class attribute set for {self.__class__.__name__}."
+            "Make sure to include `model_class=MyModel` in the class."
         )
-        return self.mapper_class.map_from_entity_to_model (instance)
-
-
+        return self.mapper_class.map_from_entity_to_model(instance)

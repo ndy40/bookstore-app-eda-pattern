@@ -3,8 +3,8 @@ from typing import TypeVar, Any, Generic
 
 from bookstore.core.domain.models import Entity
 
-MapperEntity = TypeVar('MapperEntity', bound=Entity)
-MapperModel = TypeVar('MapperModel', bound=Any)
+MapperEntity = TypeVar("MapperEntity", bound=Entity)
+MapperModel = TypeVar("MapperModel", bound=Any)
 
 
 class DataMapper(Generic[MapperEntity, MapperModel], ABC):

@@ -1,14 +1,11 @@
 import dataclasses
-import datetime
-import uuid
 from dataclasses import field
 from typing import TypeVar, Generic
 
+from bookstore.core.domain.value_objects import EntityUUID, Event
 from bunnet import PydanticObjectId
 
-from bookstore.core.domain.value_objects import EntityUUID, Event
-
-EntityId = TypeVar('EntityId', bound=EntityUUID)
+EntityId = TypeVar("EntityId", bound=EntityUUID)
 
 
 @dataclasses.dataclass
@@ -26,4 +23,3 @@ class AggregateRoot(Entity[EntityId]):
         events = self.events
         self.events = []
         return events
-
