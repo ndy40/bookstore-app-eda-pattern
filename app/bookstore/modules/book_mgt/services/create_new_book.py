@@ -18,6 +18,7 @@ def create_new_book(
             last_name=Name(author_last_name),
             dob=dob,
         ),
+        quantity=1,
     )
     repo = BookRepository(client=client)
     repo.persist(book)

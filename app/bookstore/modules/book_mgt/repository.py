@@ -13,6 +13,9 @@ class BookDataMapper(DataMapper[Book, BookModel]):
             author=Author(
                 first_name=entity.author.first_name, last_name=entity.author.last_name
             ),
+            quantity=entity.quantity,
+            media_type=entity.media_type,
+            volume=entity.volume,
         )
 
     def map_from_model_to_entity(self, instance: BookModel) -> Book:
@@ -23,6 +26,9 @@ class BookDataMapper(DataMapper[Book, BookModel]):
                 first_name=instance.author.first_name,
                 last_name=instance.author.last_name,
             ),
+            quantity=instance.quantity,
+            volume=instance.volume,
+            media_type=instance.media_type,
         )
 
 
