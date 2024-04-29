@@ -12,6 +12,7 @@ class AppConfig(BaseSettings):
         "bookstore.modules.book_mgt",
         "bookstore.modules.reservation",
     ]
+    API_PORT: int | None = 5000
 
 
 config = AppConfig()

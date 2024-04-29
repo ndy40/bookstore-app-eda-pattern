@@ -1,8 +1,8 @@
 FROM python:3.12-alpine
 ENV PYTHONDONTWRITEBYTECODE=1
 
-COPY ./app/Pipfile ./app/Pipfile.lock ./
 RUN python -m pip install --upgrade pip && pip install pipenv
+COPY ./app/Pipfile ./app/Pipfile.lock ./
 RUN pipenv install --dev --system --deploy
 
 COPY ./app/ /code/

@@ -7,7 +7,9 @@ services:
     container_name: bookstore
     volumes:
       - ./app/:/code/
-    command: /bin/sh
+    command: python web.py
+    ports:
+      - "5000:5000"
     environment:
       - DB_URL=${DB_URL}
     tty: true
