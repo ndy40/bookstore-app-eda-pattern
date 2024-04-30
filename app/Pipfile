@@ -12,7 +12,7 @@ pydantic-settings = "*"
 typer = "*"
 celery = "*"
 pymongo = "*"
-uvicorn = { extras = ["standard"], version = "*" }
+uvicorn = { extras = ["standard"]  }
 strawberry-graphql = "*"
 
 [dev-packages]
