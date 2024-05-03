@@ -1,10 +1,9 @@
 import strawberry
 from strawberry.fastapi import GraphQLRouter
 
-from bookstore.core.infrastructure.graphql.mutations import Mutations
-from bookstore.core.infrastructure.graphql.query import Query
+from bookstore.core.infrastructure.graphql.schema import Query, Mutation
 
-schema = strawberry.Schema(query=Query, mutation=Mutations)
+schema = strawberry.Schema(query=Query, mutation=Mutation)
 graphql_router = GraphQLRouter(
     schema=schema,
 )

@@ -39,7 +39,10 @@ class EntityRepository(BaseRepository[EntityId, Entity], metaclass=ABCMeta):
         init_bunnet(database=client.book_store, document_models=[self.model_class])
 
     def all(self) -> List[BaseModel]:
-        return self.active_model.find()
+        return [
+            self.mapper_class().map_from_model_to_entity(item)
+            for item in self.active_model.find()
+        ]
 
     def persist(self, entity: Entity) -> None:
         print("Got it all")

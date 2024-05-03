@@ -1,16 +1,33 @@
-from datetime import date
+from typing import TypeVar, List, ClassVar
 
 import strawberry
 
+T = TypeVar("T")
+
+
+@strawberry.input
+class Entity:
+    id: strawberry.ID
+
+
+@strawberry.interface
+class Result:
+    success: bool
+
+
+@strawberry.interface
+class Success(Result):
+    success: bool = True
+
 
 @strawberry.type
-class Author:
-    first_name: str
-    last_name: str
-    dob: date | None = None
-
-
-@strawberry.type
-class Book:
+class ErrorMessage:
     title: str
-    author: Author
+    message: str
+
+
+@strawberry.interface
+class Failure(Result):
+    success: bool = False
+    message: List[ErrorMessage]
+    model: ClassVar

@@ -23,3 +23,8 @@ def create_new_book(
     repo = BookRepository(client=client)
     repo.persist(book)
     return book
+
+
+def get_books():
+    repo = BookRepository(client=client)
+    return repo.all()

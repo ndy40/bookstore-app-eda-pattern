@@ -1,3 +1,6 @@
+from datetime import datetime
+from typing import Optional
+
 from bunnet import Document
 from pydantic import BaseModel
 
@@ -5,6 +8,7 @@ from pydantic import BaseModel
 class Author(BaseModel):
     first_name: str
     last_name: str
+    dob: Optional[datetime] = None
 
 
 class Book(Document):

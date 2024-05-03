@@ -11,7 +11,9 @@ class BookDataMapper(DataMapper[Book, BookModel]):
             id=entity.id,
             title=entity.title,
             author=Author(
-                first_name=entity.author.first_name, last_name=entity.author.last_name
+                first_name=entity.author.first_name,
+                last_name=entity.author.last_name,
+                dob=entity.author.dob,
             ),
             quantity=entity.quantity,
             media_type=entity.media_type,
@@ -25,6 +27,7 @@ class BookDataMapper(DataMapper[Book, BookModel]):
             author=Author(
                 first_name=instance.author.first_name,
                 last_name=instance.author.last_name,
+                dob=instance.author.dob,
             ),
             quantity=instance.quantity,
             volume=instance.volume,
@@ -35,3 +38,4 @@ class BookDataMapper(DataMapper[Book, BookModel]):
 class BookRepository(EntityRepository):
     mapper_class = BookDataMapper
     model_class = BookModel
+    active_model = BookModel
