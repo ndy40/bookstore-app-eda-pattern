@@ -2,6 +2,7 @@ from collections import defaultdict
 from functools import wraps
 from typing import Callable
 
+from bookstore.core.domain.constants import EventRegistry
 from bookstore.core.infrastructure.celery import app
 
 
@@ -24,7 +25,7 @@ class EventBus:
         return outer
 
     @classmethod
-    def add_event(cls, func: Callable, event: str):
+    def add_event(cls, func: Callable, event: EventRegistry):
         cls._events[event].add(func.name)
 
     @staticmethod
