@@ -10,7 +10,7 @@ class AppConfig(BaseSettings):
     BROKER_URL: str
     task_modules: list[str] = [
         "bookstore.modules.book_mgt",
-        "bookstore.modules.reservation",
+        "bookstore.modules.catalog",
     ]
     API_PORT: int | None = 5000
 
