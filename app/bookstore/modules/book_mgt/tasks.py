@@ -1,9 +1,9 @@
 from celery.utils.log import get_task_logger
 
+from bookstore.core.infrastructure.bus import event_bus
 from bookstore.core.infrastructure.celery import app
 from bookstore.core.infrastructure.publisher import publish
 from bookstore.modules.book_mgt import services
-from bookstore.modules.book_mgt.commands import ReserveBook
 from bookstore.modules.book_mgt.events import BookCreated
 
 _logger = get_task_logger(__name__)
@@ -24,10 +24,11 @@ def create_new_book(
 
     # publish event
     event = BookCreated(book_id=book.id, title=book.title, author=book.author)
-    reserve_book = ReserveBook(book_id=book.id, title=book.title)
-    publish(event, reserve_book)
+    publish(event)
+    return book
 
 
-@app.task(name="event.bookcreated")
+@event_bus.on("BookCreated")
+@app.task(name="handle_book_created_event")
 def handle_book_created_event(msg: "BookCreated"):
     _logger.info("handling book created event")

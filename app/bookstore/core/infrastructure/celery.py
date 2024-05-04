@@ -24,8 +24,9 @@ app.conf.task_eager_propagates = True
 app.conf.worker_send_task_events = True
 app.conf.task_send_sent_event = True
 app.conf.task_serializer = "pickle"
+app.conf.result_serializer = "pickle"
 app.conf.task_routes = (route_queue,)
-app.conf.accept_content = {"pickle", "json"}
+app.conf.accept_content = ["application/json", "application/x-python-serialize"]
 
 
 app.conf.task_queues = (

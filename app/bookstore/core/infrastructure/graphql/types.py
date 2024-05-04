@@ -5,7 +5,7 @@ import strawberry
 T = TypeVar("T")
 
 
-@strawberry.input
+@strawberry.interface
 class Entity:
     id: strawberry.ID
 
