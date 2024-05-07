@@ -21,8 +21,8 @@ class GQLDataMapper(Generic[MapperEntity, GQLEntity], ABC):
         raise NotImplementedError
 
 
-class BookMapper(GQLDataMapper[types.Book, domain.Book]):
-    def map_from_gql_to_domain(self, gql: types.Book) -> domain.Book:
+class BookMapper(GQLDataMapper[types.Resource, domain.Book]):
+    def map_from_gql_to_domain(self, gql: types.Resource) -> domain.Book:
         return domain.Book(
             id=gql.id,
             title=gql.title,
@@ -33,8 +33,8 @@ class BookMapper(GQLDataMapper[types.Book, domain.Book]):
             ),
         )
 
-    def map_from_domain_to_gql(self, domain: domain.Book) -> types.Book:
-        return types.Book(
+    def map_from_domain_to_gql(self, domain: domain.Book) -> types.Resource:
+        return types.Resource(
             id=domain.id,
             title=domain.title,
             author=types.Author(

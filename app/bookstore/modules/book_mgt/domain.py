@@ -1,5 +1,5 @@
 import dataclasses
-from typing import Annotated
+from typing import Annotated, List
 
 from pydantic import AfterValidator
 
@@ -14,7 +14,7 @@ MediaType = Annotated[str, AfterValidator(lambda x: x in supported_media_types)]
 @dataclasses.dataclass(kw_only=True)
 class Book(AggregateRoot):
     title: str
-    author: Author
+    author: List[Author]
     quantity: int | None = 1
     media_type: MediaType | None = None
     volume: str | None = None

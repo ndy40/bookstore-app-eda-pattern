@@ -1,11 +1,10 @@
 import dataclasses
-import datetime
-from typing import Optional
 
 from bookstore.core.domain.value_objects import ValueObject
 
 
-class Name(str):
+@dataclasses.dataclass
+class Name(str, ValueObject):
     def __new__(cls, name):
         return super().__new__(cls, name.strip())
 
@@ -14,7 +13,6 @@ class Name(str):
 class Author(ValueObject):
     first_name: Name
     last_name: Name
-    dob: Optional[datetime.date] = None
 
 
 @dataclasses.dataclass

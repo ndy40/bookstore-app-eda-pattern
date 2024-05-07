@@ -4,12 +4,12 @@ import strawberry
 from strawberry.tools import merge_types
 
 from . import resolvers
-from .types import Book
+from .types import Resource
 
 
 @strawberry.type
 class BookQuery:
-    books: List[Book] = strawberry.field(name="books", resolver=resolvers.get_books)
+    books: List[Resource] = strawberry.field(name="books", resolver=resolvers.get_books)
 
 
 BookMgtQuery = merge_types("BookMgtQuery", (BookQuery,))

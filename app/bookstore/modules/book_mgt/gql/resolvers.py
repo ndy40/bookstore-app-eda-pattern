@@ -14,11 +14,11 @@ from ..commands import CreateBook
 
 def create_book(title: str, author: types.AuthorInput) -> BookSuccess | BookFailure:
     try:
+
         cmd = CreateBook(
             title=title,
             author_first_name=author.first_name,
             author_last_name=author.last_name,
-            dob=author.dob,
         )
         book = publish(cmd, return_result=True)
         return BookSuccess(data=book_mapper.map_from_domain_to_gql(book))
@@ -28,5 +28,5 @@ def create_book(title: str, author: types.AuthorInput) -> BookSuccess | BookFail
         )
 
 
-def get_books() -> List[types.Book]:
+def get_books() -> List[types.Resource]:
     return [book_mapper.map_from_domain_to_gql(book) for book in services.get_books()]

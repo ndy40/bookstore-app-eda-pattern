@@ -1,4 +1,5 @@
-import datetime
+from enum import Enum
+from typing import List, Optional, Union
 
 import strawberry
 
@@ -9,27 +10,44 @@ from bookstore.core.infrastructure.graphql.types import Success, Failure, Entity
 class AuthorInput:
     first_name: str
     last_name: str
-    dob: datetime.date | None = None
 
 
 @strawberry.type
 class Author:
     first_name: str
     last_name: str
-    dob: datetime.date | None = None
+
+
+@strawberry.enum
+class BookCoverType(Enum):
+    PAPER_BACK = "paper-back"
+    HARD_COVER = "hard-cover"
 
 
 @strawberry.type
-class Book(Entity):
+class BookType:
+    number_of_pages: int
+    cover_type: BookCoverType
+
+
+@strawberry.type
+class VideoMedia:
+    length: str
+
+
+@strawberry.type
+class Resource(Entity):
     title: str
-    author: Author
+    author: List[Author]
+    quantity: Optional[int] = 1
+    media_type: Union[BookType, VideoMedia]
 
 
 @strawberry.type
 class BookSuccess(Success):
-    data: Book
+    data: Resource
 
 
 @strawberry.type
 class BookFailure(Failure):
-    model = Book
+    model = Resource
