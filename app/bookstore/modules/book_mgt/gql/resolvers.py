@@ -1,9 +1,9 @@
 import sys
 from typing import List
 
+from bookstore.core.infrastructure.bus.commands import command_bus
 from bookstore.core.infrastructure.graphql.data_mapper import GqlBookMapper
 from bookstore.core.infrastructure.graphql.types import ErrorMessage
-from bookstore.core.infrastructure.publisher import publish
 from bookstore.modules.book_mgt import services
 from bookstore.modules.book_mgt.gql.types import (
     BookFailure,
@@ -23,8 +23,9 @@ def create_book(title: str, author: types.AuthorInput) -> BookSuccess | BookFail
             author=[Author(first_name=author.first_name, last_name=author.last_name)],
         )
 
-        book = publish(cmd)
-        return BookSuccess(data=book_mapper.map_from_domain_to_gql(book))
+        command_bus.execute(cmd)
+        # book = publish(cmd)
+        # return BookSuccess(data=book_mapper.map_from_domain_to_gql(book))
     except Exception as e:
         import traceback
 
