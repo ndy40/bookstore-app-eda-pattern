@@ -2,8 +2,9 @@ import dataclasses
 from dataclasses import field
 from typing import TypeVar, Generic
 
-from bookstore.core.domain.value_objects import EntityUUID, Event
 from bunnet import PydanticObjectId
+
+from bookstore.core.domain.value_objects import EntityUUID, Event
 
 EntityId = TypeVar("EntityId", bound=EntityUUID)
 

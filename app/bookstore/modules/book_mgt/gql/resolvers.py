@@ -1,5 +1,7 @@
+import sys
 from typing import List
 
+from bookstore.core.infrastructure.graphql.data_mapper import GqlBookMapper
 from bookstore.core.infrastructure.graphql.types import ErrorMessage
 from bookstore.core.infrastructure.publisher import publish
 from bookstore.modules.book_mgt import services
@@ -8,21 +10,26 @@ from bookstore.modules.book_mgt.gql.types import (
     BookSuccess,
 )
 from . import types
-from .data_mapper import book_mapper
 from ..commands import CreateBook
+from ..value_objects import Author
+
+book_mapper = GqlBookMapper()
 
 
 def create_book(title: str, author: types.AuthorInput) -> BookSuccess | BookFailure:
     try:
-
         cmd = CreateBook(
             title=title,
-            author_first_name=author.first_name,
-            author_last_name=author.last_name,
+            author=[Author(first_name=author.first_name, last_name=author.last_name)],
         )
-        book = publish(cmd, return_result=True)
+
+        book = publish(cmd)
         return BookSuccess(data=book_mapper.map_from_domain_to_gql(book))
     except Exception as e:
+        import traceback
+
+        ex_info = sys.exc_info()
+        print(traceback.print_exception(*ex_info))
         return BookFailure(
             message=[ErrorMessage(title="book create", message=str(e))],
         )

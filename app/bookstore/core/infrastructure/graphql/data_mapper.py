@@ -1,14 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
+from typing import TypeVar, Any, Generic
 
-from bookstore.core.infrastructure.data_mapper import MapperEntity
+from bookstore.core.domain.models import Entity
 from bookstore.modules.book_mgt import domain
-from . import types
+from bookstore.modules.book_mgt.gql import types
 
+MapperEntity = TypeVar("MapperEntity", bound=Entity)
+MapperModel = TypeVar("MapperModel", bound=Any)
 GQLEntity = TypeVar("GQLEntity", bound=types.Entity)
 
 
-class GQLDataMapper(Generic[MapperEntity, GQLEntity], ABC):
+class _GQLDataMapper(Generic[MapperEntity, GQLEntity], ABC):
     domain_class: type[MapperEntity]
     gql_type_class: type[GQLEntity]
 
@@ -21,7 +23,7 @@ class GQLDataMapper(Generic[MapperEntity, GQLEntity], ABC):
         raise NotImplementedError
 
 
-class BookMapper(GQLDataMapper[types.Resource, domain.Book]):
+class GqlBookMapper(_GQLDataMapper[types.Resource, domain.Book]):
     def map_from_gql_to_domain(self, gql: types.Resource) -> domain.Book:
         return domain.Book(
             id=gql.id,
@@ -37,12 +39,12 @@ class BookMapper(GQLDataMapper[types.Resource, domain.Book]):
         return types.Resource(
             id=domain.id,
             title=domain.title,
-            author=types.Author(
-                first_name=domain.author.first_name,
-                last_name=domain.author.last_name,
-                dob=domain.author.dob,
-            ),
+            author=[
+                types.Author(
+                    first_name=author.first_name,
+                    last_name=author.last_name,
+                )
+                for author in domain.author
+            ],
+            media_type=None,
         )
-
-
-book_mapper = BookMapper()

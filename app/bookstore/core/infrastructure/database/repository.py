@@ -1,19 +1,21 @@
-from abc import ABCMeta, abstractmethod
-from typing import Generic, TypeVar, List, Any
+from abc import abstractmethod, ABCMeta
+from typing import TypeVar, Any, Generic, List
 
 from bunnet import init_bunnet
 from pymongo import MongoClient
 
 from bookstore.core.domain.models import Entity as DomainEntity
 from bookstore.core.domain.value_objects import EntityUUID
-from bookstore.core.infrastructure.data_mapper import DataMapper
+from bookstore.core.infrastructure.data_mapper import (
+    DataMapper,
+)
 
 Entity = TypeVar("Entity", bound=DomainEntity)
 EntityId = TypeVar("EntityId", bound=EntityUUID)
 BaseModel = TypeVar("BaseModel", bound=Any)
 
 
-class BaseRepository(Generic[EntityId, Entity], metaclass=ABCMeta):
+class _BaseRepository(Generic[EntityId, Entity], metaclass=ABCMeta):
     @abstractmethod
     def persist(self, entity: Entity) -> None: ...
 
@@ -29,7 +31,7 @@ class BaseRepository(Generic[EntityId, Entity], metaclass=ABCMeta):
     def all(self) -> List[Entity]: ...
 
 
-class EntityRepository(BaseRepository[EntityId, Entity], metaclass=ABCMeta):
+class EntityRepository(_BaseRepository[EntityId, Entity], metaclass=ABCMeta):
     mapper_class: type[DataMapper[Entity, BaseModel]]
     model_class: type[Entity]
     active_model = BaseModel
@@ -45,7 +47,6 @@ class EntityRepository(BaseRepository[EntityId, Entity], metaclass=ABCMeta):
         ]
 
     def persist(self, entity: Entity) -> None:
-        print("Got it all")
         entity = self.mapper_class().map_from_entity_to_model(entity)
         entity.insert()
 

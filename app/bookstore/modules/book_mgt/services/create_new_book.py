@@ -1,27 +1,21 @@
-from datetime import date
-
 from bookstore.core.infrastructure.database.connect import client
-from bookstore.modules.book_mgt.domain import Author
-from bookstore.modules.book_mgt.domain import Book
-from bookstore.modules.book_mgt.repository import BookRepository
-from bookstore.modules.book_mgt.value_objects import Name
+from bookstore.modules.book_mgt.domain import Author, Book
+from bookstore.modules.book_mgt.repository import BookRepository, book_repo
 
 
-def create_new_book(
-    title: str, author_first_name: str, author_last_name: str, dob: date = None
-) -> Book:
+def create_new_book(title: str, author_first_name: str, author_last_name: str) -> Book:
 
     book = Book(
         title=title,
-        author=Author(
-            first_name=Name(author_first_name),
-            last_name=Name(author_last_name),
-            dob=dob,
-        ),
+        author=[
+            Author(
+                first_name=author_first_name,
+                last_name=author_last_name,
+            )
+        ],
         quantity=1,
     )
-    repo = BookRepository(client=client)
-    repo.persist(book)
+    book_repo.persist(book)
     return book
 
 

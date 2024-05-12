@@ -40,7 +40,7 @@ class Resource(Entity):
     title: str
     author: List[Author]
     quantity: Optional[int] = 1
-    media_type: Union[BookType, VideoMedia]
+    media_type: Union[BookType, VideoMedia] | None = None
 
 
 @strawberry.type

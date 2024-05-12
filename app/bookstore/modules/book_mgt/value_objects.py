@@ -4,7 +4,7 @@ from bookstore.core.domain.value_objects import ValueObject
 
 
 @dataclasses.dataclass
-class Name(str, ValueObject):
+class Name(str):
     def __new__(cls, name):
         return super().__new__(cls, name.strip())
 

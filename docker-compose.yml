@@ -20,6 +20,7 @@ services:
   workers:
     build:
       context: .
+    restart: unless-stopped
     command:
       celery -A bookstore.core.infrastructure.celery.app worker --loglevel=debug
     environment:
