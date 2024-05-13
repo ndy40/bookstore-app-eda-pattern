@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional, Union
+from typing import List, Optional
 
 import strawberry
 
@@ -35,12 +35,23 @@ class VideoMedia:
     length: str
 
 
+@strawberry.input
+class VideoMediaInput:
+    length: str
+
+
+@strawberry.input
+class MediaInputType:
+    number_of_pages: int
+    cover_type: BookCoverType
+
+
 @strawberry.type
 class Resource(Entity):
     title: str
     author: List[Author]
     quantity: Optional[int] = 1
-    media_type: Union[BookType, VideoMedia] | None = None
+    media_type: BookType | None = None
 
 
 @strawberry.type

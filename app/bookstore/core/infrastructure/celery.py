@@ -19,10 +19,8 @@ app = Celery("app", broker=config.BROKER_URL)
 app.autodiscover_tasks(config.task_modules)
 
 app.conf.result_backend = config.CELERY_RESULT_BACKEND
-# app.conf.task_routes = (route_queue,)
 app.conf.task_eager_propagates = True
 app.conf.worker_send_task_events = True
-app.conf.task_send_sent_event = True
 app.conf.task_serializer = "pickle"
 app.conf.result_serializer = "pickle"
 app.conf.task_routes = (route_queue,)

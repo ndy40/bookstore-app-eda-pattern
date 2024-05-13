@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from types import FunctionType
-from typing import TypeVar, Generic, Dict, Type, Callable
+from typing import TypeVar, Generic, Dict, Type, Callable, Any
 
 from celery.local import PromiseProxy
+from celery.result import AsyncResult
 
 from bookstore.core.domain.value_objects import Command
 from bookstore.core.infrastructure.bus.exceptions import (
@@ -48,21 +49,25 @@ class CommandBus:
 
         self._handlers[command_cls] = handler
 
-    def execute(self, command: Command) -> None:
+    def execute(self, command: Command) -> Any | None:
         try:
-            self.handle(command=command, handler=self._handlers[type(command)])
+            return self.handle(command=command, handler=self._handlers[type(command)])
         except KeyError:
             raise MissingCommandHandlerException()
 
     def handle(
         self, command: Command, handler: CommandHandler | HandlerFuncType | PromiseProxy
     ) -> None:
+        result = None
         if hasattr(handler, "handle") and callable(getattr(handler, "handle", None)):
-            handler.handle(command)
+            return handler.handle(command)
         elif isinstance(handler, PromiseProxy):
-            handler.delay(command)
+            task_result: AsyncResult = handler.delay(command)
+            result = task_result.get(timeout=20)
         else:
-            handler(command)
+            result = handler(command)
+
+        return result
 
 
 command_bus = CommandBus()

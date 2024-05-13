@@ -22,7 +22,7 @@ services:
       context: .
     restart: unless-stopped
     command:
-      celery -A bookstore.core.infrastructure.celery.app worker --loglevel=debug
+      celery -A bookstore.core.infrastructure.celery.app worker --loglevel=INFO
     environment:
       - DB_URL=${DB_URL}
       - BROKER_URL=${BROKER_URL}

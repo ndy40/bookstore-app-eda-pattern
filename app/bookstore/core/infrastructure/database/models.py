@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import List
 
 from bunnet import Document
@@ -9,11 +10,21 @@ class Author(BaseModel):
     last_name: str
 
 
+class BookCoverType(Enum):
+    PAPER_BACK = "paper-back"
+    HARD_COVER = "hard-cover"
+
+
+class BookType(BaseModel):
+    number_of_pages: int
+    cover_type: BookCoverType
+
+
 class Book(Document):
     title: str
     author: List[Author]
     quantity: int
-    media_type: str | None = None
+    media_type: BookType | None = None
     quantity: int | None = None
     volume: str | None = None
 

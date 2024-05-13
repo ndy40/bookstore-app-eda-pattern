@@ -6,6 +6,7 @@ from celery.result import AsyncResult
 from celery.utils.log import get_task_logger
 
 from bookstore.core.domain.value_objects import Event, Command
+from bookstore.core.infrastructure.bus.events import event_bus
 from bookstore.core.infrastructure.celery import app
 
 _logger = get_task_logger(__name__)
@@ -19,7 +20,8 @@ def publish(msg: Event | Command, return_result=False) -> Any or None:
 @publish.register
 def _publish_event(msg: Event, return_result=False) -> Any or None:
     event_name = msg.__class__.__name__
-    # event_bus.dispatch(event_name, msg)
+    print("Event triggered", event_name)
+    event_bus.dispatch(event_name, msg)
 
 
 @publish.register

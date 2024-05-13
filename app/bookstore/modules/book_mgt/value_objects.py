@@ -1,4 +1,5 @@
 import dataclasses
+from enum import Enum
 
 from bookstore.core.domain.value_objects import ValueObject
 
@@ -19,3 +20,14 @@ class Author(ValueObject):
 class StatusAttribute(ValueObject):
     total_quantity: int | None = 0
     available_quantity: int | None = None
+
+
+class BookCoverType(Enum):
+    PAPER_BACK = "paper-back"
+    HARD_COVER = "hard-cover"
+
+
+@dataclasses.dataclass
+class BookType(ValueObject):
+    number_of_pages: int
+    cover_type: BookCoverType

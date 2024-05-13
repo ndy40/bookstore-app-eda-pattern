@@ -1,31 +1,53 @@
-from abc import ABC, abstractmethod
 from collections import defaultdict
-from typing import Generic, TypeVar, Dict, List, Type
+from functools import wraps
+from typing import Callable
 
-from bookstore.core.domain.value_objects import Event
-from bookstore.core.infrastructure.bus.utils import get_message_cls
-
-TEvent = TypeVar("TEvent", bound=Event)
-
-
-class EventHandler(ABC, Generic[TEvent]):
-
-    @abstractmethod
-    def handle(self, event: TEvent) -> None:
-        pass
+from bookstore.core.domain.constants import EventRegistry
+from bookstore.core.infrastructure.celery import app
 
 
 class EventBus:
+    """Simple eventbus for registering callables interested in an event"""
 
-    def __init__(self) -> None:
-        self._handlers: Dict[Type[Event], List[EventHandler]] = defaultdict(list)
+    _events = defaultdict(set)
 
-    def register(self, handler: EventHandler) -> None:
-        self._handlers[get_message_cls(type(handler), Event)].append(handler)
+    @classmethod
+    def on(cls, event: str):
+        def outer(func):
+            cls.add_event(func, event)
 
-    def publish(self, event: Event) -> None:
-        for handler in self._handlers[type(event)]:
-            self.handle(event=event, handler=handler)
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                return func(*args, **kwargs)
 
-    def handle(self, event: Event, handler: EventHandler) -> None:
-        handler.handle(event)
+            return wrapper
+
+        return outer
+
+    @classmethod
+    def add_event(cls, func: Callable, event: EventRegistry):
+        cls._events[event].add(func.name)
+
+    @staticmethod
+    def dispatch(event: str, *args, **kwargs):
+        if event in EventBus._events:
+            for task_name in EventBus._events[event]:
+                payload = {}
+                if args:
+                    payload["args"] = tuple(args)
+                else:
+                    payload["kwarg"] = kwargs
+
+                app.send_task(task_name, routing_key=task_name, **payload)
+
+    @classmethod
+    def clear(cls, event):
+        if event in EventBus._events:
+            del cls._events[event]
+
+    @classmethod
+    def events(cls):
+        return cls._events
+
+
+event_bus = EventBus
