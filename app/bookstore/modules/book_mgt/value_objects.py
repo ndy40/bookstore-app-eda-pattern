@@ -12,8 +12,8 @@ class Name(str):
 
 @dataclasses.dataclass
 class Author(ValueObject):
-    first_name: Name
-    last_name: Name
+    first_name: str
+    last_name: str
 
 
 @dataclasses.dataclass

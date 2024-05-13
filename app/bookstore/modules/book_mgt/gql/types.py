@@ -6,12 +6,6 @@ import strawberry
 from bookstore.core.infrastructure.graphql.types import Success, Failure, Entity
 
 
-@strawberry.input
-class AuthorInput:
-    first_name: str
-    last_name: str
-
-
 @strawberry.type
 class Author:
     first_name: str
@@ -35,21 +29,10 @@ class VideoMedia:
     length: str
 
 
-@strawberry.input
-class VideoMediaInput:
-    length: str
-
-
-@strawberry.input
-class MediaInputType:
-    number_of_pages: int
-    cover_type: BookCoverType
-
-
 @strawberry.type
 class Resource(Entity):
     title: str
-    author: List[Author]
+    authors: List[Author]
     quantity: Optional[int] = 1
     media_type: BookType | None = None
 
@@ -62,3 +45,19 @@ class BookSuccess(Success):
 @strawberry.type
 class BookFailure(Failure):
     model = Resource
+
+
+@strawberry.input
+class AuthorInput:
+    first_name: str
+    last_name: str
+
+@strawberry.input
+class VideoMediaInput:
+    length: str
+
+
+@strawberry.input
+class MediaInputType:
+    number_of_pages: int
+    cover_type: BookCoverType

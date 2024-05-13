@@ -22,7 +22,7 @@ class BookType(BaseModel):
 
 class Book(Document):
     title: str
-    author: List[Author]
+    authors: List[Author]
     quantity: int
     media_type: BookType | None = None
     quantity: int | None = None

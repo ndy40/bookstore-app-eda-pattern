@@ -9,7 +9,7 @@ class CreateBook(Command):
     summary: str
     author: List[Author]
     quantity: Optional[int] = 1
-    media_type: BookType
+    media_type: Optional[BookType]=None
 
 
 class UpdateBook(Command):

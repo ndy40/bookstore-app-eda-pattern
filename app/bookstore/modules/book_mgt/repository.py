@@ -12,12 +12,12 @@ class _BookDataMapper(DataMapper[domain.Book, BookModel]):
                 first_name=author.first_name,
                 last_name=author.last_name,
             )
-            for author in entity.author
+            for author in entity.authors
         ]
         return BookModel(
             id=entity.id,
             title=entity.title,
-            author=authors,
+            authors=authors,
             quantity=entity.quantity,
             media_type=entity.media_type,
             volume=entity.volume,
@@ -27,11 +27,10 @@ class _BookDataMapper(DataMapper[domain.Book, BookModel]):
         return domain.Book(
             id=instance.id,
             title=instance.title,
-            author=domain.Author(
-                first_name=instance.author.first_name,
-                last_name=instance.author.last_name,
-                dob=instance.author.dob,
-            ),
+            authors=[domain.Author(
+                first_name=author.first_name,
+                last_name=author.last_name,
+            ) for author in instance.authors],
             quantity=instance.quantity,
             volume=instance.volume,
             media_type=instance.media_type,

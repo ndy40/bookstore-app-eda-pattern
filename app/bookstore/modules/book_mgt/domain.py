@@ -10,7 +10,7 @@ supported_media_types = ["paperback", "audio", "video", "podcast", "film"]
 @dataclasses.dataclass(kw_only=True)
 class Book(AggregateRoot):
     title: str
-    author: List[Author]
+    authors: List[Author]
     quantity: int | None = 1
     media_type: Optional[BookType] = None
     volume: str | None = None

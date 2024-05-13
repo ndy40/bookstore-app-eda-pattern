@@ -21,17 +21,20 @@ def create_new_book(
         title=msg.title,
         author_first_name=msg.author[0].first_name,
         author_last_name=msg.author[0].last_name,
+        # media_type=msg.media_type,
+        quantity=msg.quantity
     )
     _logger.info(f"New book crated {book.id}")
+
     return BookCreated(
         book_id=book.id,
         title=book.title,
-        author=book.author,
+        author=book.authors,
         quantity=book.quantity,
-        media_type=BookType(
-            number_of_pages=book.media_type.number_of_pages,
-            cover_type=book.media_type.cover_type,
-        ),
+    #     media_type={
+    #         "number_of_pages": book.media_type.number_of_pages,
+    #         "cover_type": book.media_type.cover_type.value,
+    # },
     )
 
 
