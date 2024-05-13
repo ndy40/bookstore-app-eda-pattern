@@ -26,7 +26,6 @@ app.conf.result_serializer = "pickle"
 app.conf.task_routes = (route_queue,)
 app.conf.accept_content = ["application/json", "application/x-python-serialize"]
 
-
 app.conf.task_queues = (
     Queue("celery"),
     Queue(

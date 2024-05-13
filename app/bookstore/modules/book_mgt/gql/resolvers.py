@@ -67,7 +67,7 @@ class GqlBookCreatedEventMapper(_GQLDataMapper[Resource, BookCreated]):
         if domain.media_type:
             media_type = GqlBookType(
                 number_of_pages=domain.media_type.number_of_pages,
-                cover_type=domain.media_type.cover_type.value,
+                cover_type=domain.media_type.cover_type,
             )
 
         return Resource(
