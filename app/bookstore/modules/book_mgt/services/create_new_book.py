@@ -21,10 +21,10 @@ def create_new_book(
             )
         ],
         quantity=quantity,
-        # media_type=BookType(
-        #     number_of_pages=media_type.number_of_pages,
-        #     cover_type=media_type.cover_type.value,
-        # ),
+        media_type=BookType(
+            number_of_pages=media_type.number_of_pages,
+            cover_type=media_type.cover_type.value,
+        ),
     )
     book_repo.persist(book)
     return book

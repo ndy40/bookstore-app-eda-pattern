@@ -4,7 +4,6 @@ from typing import List
 from bookstore.core.infrastructure.bus.commands import command_bus
 from bookstore.core.infrastructure.graphql.types import ErrorMessage
 from bookstore.modules.book_mgt import services, domain
-
 from bookstore.modules.book_mgt.gql.types import (
     BookType as GqlBookType,
     BookFailure,
@@ -13,7 +12,6 @@ from bookstore.modules.book_mgt.gql.types import (
     AuthorInput,
     MediaInputType,
 )
-
 from ..commands import CreateBook
 from ..data_mapper import _GQLDataMapper
 from ..events import BookCreated
@@ -39,12 +37,13 @@ class GqlBookMapper(_GQLDataMapper[Resource, domain.Book]):
     def map_from_domain_to_gql(self, obj: domain.Book) -> Resource:
         media_type = None
 
-        if media:= getattr(obj, "media_type"):
+        if media := getattr(obj, "media_type"):
+            print('## media ', media)
             media_type = GqlBookType(
                 number_of_pages=media.number_of_pages,
                 cover_type=media.cover_type,
             )
-        print(obj.authors)
+            print("I got media")
 
         return Resource(
             id=obj.id,
@@ -68,7 +67,7 @@ class GqlBookCreatedEventMapper(_GQLDataMapper[Resource, BookCreated]):
         if domain.media_type:
             media_type = GqlBookType(
                 number_of_pages=domain.media_type.number_of_pages,
-                cover_type=domain.media_type.cover_type,
+                cover_type=domain.media_type.cover_type.value,
             )
 
         return Resource(
@@ -100,19 +99,24 @@ def create_book(
         quantity: int = 1,
 ) -> BookSuccess | BookFailure:
     try:
+        media_input = None
+
+        if media_type:
+            media_input = {
+                "number_of_pages": media_type.number_of_pages,
+                "cover_type": media_type.cover_type.value,
+            }
+
         cmd = CreateBook(
             title=title,
             author=[Author(first_name=author.first_name, last_name=author.last_name) for author in authors],
             quantity=quantity,
             summary=summary,
-            # media_type=BookType(
-            #     number_of_pages=media_type.number_of_pages,
-            #     cover_type=media_type.cover_type.value,
-            # )
+            media_type=media_input
         )
 
         book = command_bus.execute(cmd)
-        print("## book", type(book))
+        print('### created book', book.__dict__)
         return BookSuccess(data=book_event_mapper.map_from_domain_to_gql(book))
     except Exception as e:
         import traceback
