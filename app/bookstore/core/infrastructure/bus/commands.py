@@ -7,7 +7,7 @@ from celery.result import AsyncResult
 
 from bookstore.core.domain.value_objects import Command
 from bookstore.core.infrastructure.bus.exceptions import (
-    MissingCommandHandlerException,
+    MissingCommandHandlerException, CommandHandlerRegisteredException,
 )
 from bookstore.core.infrastructure.bus.utils import (
     get_message_cls,
@@ -15,7 +15,6 @@ from bookstore.core.infrastructure.bus.utils import (
 )
 
 TCommand = TypeVar("TCommand", bound=Command)
-
 
 HandlerFuncType = Callable[[TCommand], None]
 
@@ -42,7 +41,7 @@ class CommandBus:
                 command_cls = first_input[1]
 
         if command_cls in self._handlers:
-            raise ValueError()
+            raise CommandHandlerRegisteredException()
 
         if command_cls is None:
             raise ValueError("Unsupported handler")
@@ -56,7 +55,7 @@ class CommandBus:
             raise MissingCommandHandlerException()
 
     def handle(
-        self, command: Command, handler: CommandHandler | HandlerFuncType | PromiseProxy
+            self, command: Command, handler: CommandHandler | HandlerFuncType | PromiseProxy
     ) -> None:
         result = None
         if hasattr(handler, "handle") and callable(getattr(handler, "handle", None)):
